@@ -220,7 +220,7 @@ class SeleniumTestability(LibraryComponent):
         """
         Explicit waits until document.readyState is complete.
         """
-        old_timeout = self.ctx.set_selenium_timeout(self.ctx.testability_settings["timeout"])
+        old_timeout = self.ctx.set_selenium_timeout("1 hour")
         try:
             self.ctx.driver.execute_async_script(JS_LOOKUP["wait_for_document_ready"])
         except Exception as ex:
