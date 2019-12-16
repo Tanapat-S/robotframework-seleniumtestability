@@ -12,6 +12,7 @@ legacy/
 geckodriver*.log
 package-lock.json
 .mypy_cache/
+src/SeleniumTestability/js/
 monkeytype.sqlite3
 .coveragedb
 coverage_report/
