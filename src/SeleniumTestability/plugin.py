@@ -275,7 +275,7 @@ class SeleniumTestability(LibraryComponent):
         if error_on_timeout is not None:
             local_error_on_timeout = is_truthy(error_on_timeout)
 
-        old_timeout = self.ctx.set_selenium_timeout("1 hour")
+        old_timeout = self.ctx.set_selenium_timeout(self.ctx.testability_settings["timeout"])
         try:
             WebDriverWait(self.ctx.driver, local_timeout, 0.15).until(
                 lambda x: self.ctx.driver.execute_async_script(JS_LOOKUP["wait_for_testability"])
