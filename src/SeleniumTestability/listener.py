@@ -20,6 +20,7 @@ def auto_injection(func: Callable) -> Callable:
     def injection_wrapper(*args: Any, **kwargs: Any) -> Any:
         this = args[0]
         if this.automatic_injection:
+            this.testability.wait_for_document_ready()
             this.testability.instrument_browser()
         return func(*args, **kwargs)
 

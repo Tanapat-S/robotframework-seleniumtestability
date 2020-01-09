@@ -221,13 +221,18 @@ class SeleniumTestability(LibraryComponent):
         """
         Explicit waits until document.readyState is complete.
         """
-        old_timeout = self.ctx.set_selenium_timeout("1 hour")
+        local_timeout = self.timeout
+        local_error_on_timeout = self.error_on_timeout
+
         try:
-            self.ctx.driver.execute_async_script(JS_LOOKUP["wait_for_document_ready"])
-        except Exception as ex:
-            raise ex
-        finally:
-            self.ctx.set_selenium_timeout(old_timeout)
+            WebDriverWait(self.ctx.driver, local_timeout, 0.15, ignored_exceptions=[TimeoutException]).until(
+                lambda x: self.ctx.driver.execute_async_script(JS_LOOKUP["wait_for_document_ready"])
+            )
+        except TimeoutException:
+            if local_error_on_timeout:
+                raise TimeoutException("Timed out waiting for testability ready callback to trigger.")
+        except Exception as e:
+            self.warn(e)
 
     @log_wrapper
     @keyword
