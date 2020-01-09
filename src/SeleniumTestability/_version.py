@@ -488,7 +488,7 @@ def get_versions():
     verbose = cfg.verbose
 
     try:
-        return "1.1.0"
+        return git_versions_from_keywords(get_keywords(), cfg.tag_prefix, verbose)
     except NotThisMethod:
         pass
 
