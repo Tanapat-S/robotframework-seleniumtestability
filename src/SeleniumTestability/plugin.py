@@ -28,6 +28,7 @@ def log_wrapper(wrapped: Callable, instance: "SeleniumTestability", args: Any, k
     instance.logger.debug("{}() [LEAVING]".format(wrapped.__name__))
     return ret
 
+
 class SeleniumTestability(LibraryComponent):
     """
     SeleniumTestability is plugin for SeleniumLibrary that provides either manual or automatic waiting asyncronous events within SUT. This works by injecting small javascript snippets that can monitor the web application's state and when any supported events are happening within the sut, execution of SeleniumLibrary's keywords are blocked until timeout or those events are processed.
@@ -228,7 +229,6 @@ class SeleniumTestability(LibraryComponent):
         finally:
             self.ctx.set_selenium_timeout(old_timeout)
 
-
     @log_wrapper
     @keyword
     def set_testability_automatic_wait(self: "SeleniumTestability", enabled: bool) -> None:
@@ -275,9 +275,8 @@ class SeleniumTestability(LibraryComponent):
         if error_on_timeout is not None:
             local_error_on_timeout = is_truthy(error_on_timeout)
 
-        old_timeout = self.ctx.set_selenium_timeout(self.ctx.testability_settings["timeout"])
         try:
-            WebDriverWait(self.ctx.driver, local_timeout, 0.15).until(
+            WebDriverWait(self.ctx.driver, local_timeout, 0.15, ignored_exceptions=[TimeoutException]).until(
                 lambda x: self.ctx.driver.execute_async_script(JS_LOOKUP["wait_for_testability"])
             )
         except TimeoutException:
@@ -285,8 +284,6 @@ class SeleniumTestability(LibraryComponent):
                 raise TimeoutException("Timed out waiting for testability ready callback to trigger.")
         except Exception as e:
             self.warn(e)
-        finally:
-            self.ctx.set_selenium_timeout(old_timeout)
 
     @log_wrapper
     @keyword
